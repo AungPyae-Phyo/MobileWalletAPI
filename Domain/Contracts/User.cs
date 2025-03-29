@@ -19,7 +19,7 @@ namespace Domain.Contracts
 
         public string? Email { get; set; } = default!;
 
-        public string? Balance { get; set; } = default!;
+        public decimal? Balance { get; set; } = default!;
 
         public string? RefreshToken { get; set; }
 
