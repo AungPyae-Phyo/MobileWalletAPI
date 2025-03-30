@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Logic;
 using Application.Services;
 using Domain.Database;
 using Infrastructure.IRepository;
@@ -16,6 +17,10 @@ builder.Services.AddSwaggerGen(); // OpenAPI is already configured with SwaggerG
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IKYCRepo, KYCRepo>();
+builder.Services.AddScoped<IKYCService, KYCService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IUnit, Unit>();
 
 builder.Services.AddEndpointsApiExplorer();
