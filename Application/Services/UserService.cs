@@ -5,11 +5,6 @@ using Domain.Contracts;
 using Infrastructure.GenericRepo;
 using Infrastructure.IRepository;
 using Infrastructure.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services;
 public class UserService: IUserService
