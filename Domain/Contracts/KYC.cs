@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,8 +12,9 @@ namespace Domain.Contracts;
 public class KYC : BaseEntity<string>
 {
     public string? UserID { get; set; }
-    public string? DocumentTypeID { get; set; }
+    public string? DocumentType{ get; set; }
     public string? FrontImage { get; set; }
     public string? BackImage { get; set; }
     public string? SelfieImage { get; set; }
+    public string? Status { get; set; } = Enum.GetName(typeof(BankStatus), BankStatus.NEW_USER);
 }   
