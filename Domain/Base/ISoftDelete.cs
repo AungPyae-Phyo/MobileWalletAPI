@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         DateTime? DeletedOn { get; set; }
 
-        string? DeletedBy { get; set; }
+       // string? DeletedBy { get; set; }
 
         bool? IsDeleted { get; set; }
     }

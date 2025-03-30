@@ -9,7 +9,7 @@ namespace Domain.Entities
 {
     public class BaseEntity<TId> : IEntity<TId>, ISoftDelete
     {
-        [Key]
+        [Key]   
 
         public TId Id { get; set; }
         public string Name { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace Domain.Entities
         public string? LastModifiedBy { get; set; }
         public DateTime? LastModifiedOn { get; set; }
         public DateTime? DeletedOn { get; set; }
-        public string? DeletedBy { get; set; }
+       // public string? DeletedBy { get; set; }
         public bool? IsDeleted { get; set; } = false;
 
         protected BaseEntity()
