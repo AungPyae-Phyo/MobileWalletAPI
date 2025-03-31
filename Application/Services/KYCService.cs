@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Contracts;
+using Domain.Enums;
 using Infrastructure.GenericRepo;
 using Infrastructure.UnitOfWork;
 using System;
@@ -47,12 +48,9 @@ namespace Application.Services
             // Create New KYC
             var kyc = _mapper.Map<KYC>(kycRegistrationDto);
             kyc.Id = Guid.NewGuid().ToString();
-            kyc.Status = "NEW_USER";
+            kyc.Status = BankStatus.PENDING.ToString();
             kyc.CreatedOn = DateTime.UtcNow;
-
-            // Log before saving KYC
-            Console.WriteLine($"Creating new KYC record for User ID {kyc.Id}");
-
+            kyc.UserID = kycRegistrationDto.UserID;
             var result = await _kycRepository.Add(kyc);
 
             // Log result of saving
