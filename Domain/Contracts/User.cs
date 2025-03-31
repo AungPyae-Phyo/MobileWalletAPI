@@ -1,13 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Domain.Contracts
 {
     [Table("Users")]
@@ -18,8 +11,6 @@ namespace Domain.Contracts
         public string? HashPassword { get; set; } = default!;
 
         public string? Email { get; set; } = default!;
-
-        public decimal? Balance { get; set; } = default!;
 
         public string? RefreshToken { get; set; }
 
