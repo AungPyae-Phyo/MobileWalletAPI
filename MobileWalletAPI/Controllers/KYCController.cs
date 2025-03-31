@@ -3,6 +3,8 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MobileWalletAPI.Controllers
@@ -21,17 +23,27 @@ namespace MobileWalletAPI.Controllers
         /// <summary>
         /// Submit KYC registration (Only for registered users).
         /// </summary>
-        [HttpPost("kyc-register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Post([FromForm] KYCDTO kycDTO)
         {
             try
             {
                 var result = await _kycService.Create(kycDTO);
-                return CreatedAtAction(nameof(GetById), new { id = kycDTO.UserID }, new { message = "KYC submitted successfully", kycId = kycDTO.UserID });
+                return CreatedAtAction(nameof(GetById), new { id = kycDTO.UserID }, new
+                {
+                    message = "KYC submitted successfully",
+                    status = "success",
+                    data = new { kycId = kycDTO.UserID }
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new
+                {
+                    message = "Failed to submit KYC",
+                    status = "error",
+                    errors = new List<object> { new { field = "KYC", message = ex.Message } }
+                });
             }
         }
 
@@ -39,14 +51,28 @@ namespace MobileWalletAPI.Controllers
         /// Get all KYC records.
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllKycs()
         {
-            var result = await _kycService.GetAll();
-            if (result == null)
+            var kycs = await _kycService.GetAll();
+
+            if (kycs == null || !kycs.Any())
             {
-                return NotFound(new { message = "No KYC records found" });
+                return NotFound(new
+                {
+                    message = "No KYC records found",
+                    status = "error",
+                    count = 0,
+                    errors = new List<object> { new { field = "KYC", message = "No records exist in the database." } }
+                });
             }
-            return Ok(result);
+
+            return Ok(new
+            {
+                message = "KYC records retrieved successfully",
+                status = "success",
+                count = kycs.Count(),
+                data = kycs
+            });
         }
 
         /// <summary>
@@ -58,18 +84,32 @@ namespace MobileWalletAPI.Controllers
             try
             {
                 var result = await _kycService.GetById(id);
-                return Ok(result);
+                return Ok(new
+                {
+                    message = "KYC record retrieved successfully",
+                    status = "success",
+                    data = result
+                });
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return NotFound(new
+                {
+                    message = "KYC record not found",
+                    status = "error",
+                    errors = new List<object> { new { field = "ID", message = ex.Message } }
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = "An error occurred", details = ex.Message });
+                return BadRequest(new
+                {
+                    message = "An error occurred",
+                    status = "error",
+                    errors = new List<object> { new { field = "General", message = ex.Message } }
+                });
             }
         }
-
 
         /// <summary>
         /// Soft delete a KYC record.
@@ -80,9 +120,19 @@ namespace MobileWalletAPI.Controllers
             var success = await _kycService.SoftDelete(id);
             if (!success)
             {
-                return NotFound(new { message = "KYC record not found or already deleted" });
+                return NotFound(new
+                {
+                    message = "KYC record not found or already deleted",
+                    status = "error",
+                    errors = new List<object> { new { field = "ID", message = "Record does not exist or is already deleted." } }
+                });
             }
-            return Ok(new { message = "KYC record deleted successfully" });
+
+            return Ok(new
+            {
+                message = "KYC record deleted successfully",
+                status = "success"
+            });
         }
 
         /// <summary>
@@ -96,13 +146,28 @@ namespace MobileWalletAPI.Controllers
                 var result = await _kycService.Update(kycDTO);
                 if (result == 0)
                 {
-                    return NotFound(new { message = "KYC record not found" });
+                    return NotFound(new
+                    {
+                        message = "KYC record not found",
+                        status = "error",
+                        errors = new List<object> { new { field = "ID", message = "No matching record found to update." } }
+                    });
                 }
-                return Ok(new { message = "KYC updated successfully" });
+
+                return Ok(new
+                {
+                    message = "KYC updated successfully",
+                    status = "success"
+                });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return BadRequest(new
+                {
+                    message = "Failed to update KYC",
+                    status = "error",
+                    errors = new List<object> { new { field = "General", message = ex.Message } }
+                });
             }
         }
     }
