@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Application.DTOs.WalletDTO;
+using AutoMapper;
+using Domain.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +13,12 @@ namespace Application.DTOs.WalletDTO
     {
         public string? UserId { get; set; }
         public decimal Balance { get; set; }
+    }
+}
+public class WalletMappingProfile : Profile
+{
+    public WalletMappingProfile()
+    {
+        CreateMap<Wallet, WalletDTO>().ReverseMap();
     }
 }
