@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.UserDTO;
 using Application.Interfaces;
+using Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,8 +25,7 @@ namespace MobileWalletAPI.Controllers
             return Created("", new { result = (response > 0) });
 
         }
-
-
+       
     }
 }
 
