@@ -10,7 +10,7 @@ namespace Domain.Contracts;
 [Table("Wallet")]
 public class Wallet : BaseEntity<string>
 {
-    public string? UserID { get; set; }
+    public string? UserId { get; set; }
     public decimal? Balance { get; set; }
 
 }
