@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.KYCDTO;
 using Application.Interfaces;
+using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -138,12 +139,25 @@ namespace MobileWalletAPI.Controllers
         /// <summary>
         /// Update KYC record.
         /// </summary>
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] KYCDTO kycDTO)
+        [HttpPut("update-status/{userId}")]
+        public async Task<IActionResult> UpdateStatus([FromBody] KYCStatusDTO kycStatusDTO, string userId)
         {
             try
             {
-                var result = await _kycService.Update(kycDTO);
+                // Check if userId in the route matches userId in the DTO
+                if (userId != kycStatusDTO.UserId)
+                {
+                    return BadRequest(new
+                    {
+                        message = "User ID mismatch.",
+                        status = "error",
+                        errors = new List<object> { new { field = "UserId", message = "User ID in route does not match User ID in the body." } }
+                    });
+                }
+
+                // Call the service to update the status
+                var result = await _kycService.UpdateStatus(kycStatusDTO);
+
                 if (result == 0)
                 {
                     return NotFound(new
@@ -156,7 +170,7 @@ namespace MobileWalletAPI.Controllers
 
                 return Ok(new
                 {
-                    message = "KYC updated successfully",
+                    message = "KYC status updated successfully",
                     status = "success"
                 });
             }
@@ -164,11 +178,12 @@ namespace MobileWalletAPI.Controllers
             {
                 return BadRequest(new
                 {
-                    message = "Failed to update KYC",
+                    message = "Failed to update KYC status",
                     status = "error",
                     errors = new List<object> { new { field = "General", message = ex.Message } }
                 });
             }
         }
+
     }
 }
