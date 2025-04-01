@@ -5,19 +5,25 @@ using Domain.Database;
 using Infrastructure.IRepository;
 using Infrastructure.Repository;
 using Infrastructure.UnitOfWork;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddSwaggerGen(); // OpenAPI is already configured with SwaggerGen
-
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IKYCRepo, KYCRepo>();
+builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IKYCService, KYCService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<TokenService>();
