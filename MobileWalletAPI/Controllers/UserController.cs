@@ -25,7 +25,30 @@ namespace MobileWalletAPI.Controllers
             return Created("", new { result = (response > 0) });
 
         }
-       
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _service.GetAll();
+            if (users == null || !users.Any())
+            {
+                return NotFound(new
+                {
+                    message = "No users found",
+                    status = "error",
+                    count = 0,
+                    data = new List<object>()
+                });
+            }
+            return Ok(new
+            {
+                message = "Users fetched successfully",
+                status = "success",
+                count = users.Count(),
+                data = users
+            });
+        }
+
     }
 }
 

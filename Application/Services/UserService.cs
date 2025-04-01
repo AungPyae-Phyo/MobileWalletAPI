@@ -61,7 +61,9 @@ namespace Application.Services
                 {
                     Id = Guid.NewGuid().ToString(),
                     Balance = 0,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    Name = user.Name,
+
                 };
 
                 int walletResult = await _walletRepository.Add(wallet);
@@ -79,6 +81,20 @@ namespace Application.Services
                 Console.WriteLine($"Error registering user: {ex.Message}");
                 return -1;
             }
+        }
+        public async Task<int> CountAll()
+        {
+            return await _userRepository.Count();
+        }
+
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            return await _userRepository.GetAll("");
+        }
+
+        public Task<int> SoftDelete(string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
