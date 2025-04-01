@@ -96,5 +96,9 @@ namespace Application.Services
         {
             throw new NotImplementedException();
         }
+        public async Task<IEnumerable<UserWithWalletAndKYCDto>> GetAllUsersWithWalletAndKYC()
+        {
+            return await _userRepo.GetAllUsersWithWalletAndKYC();
+        }
     }
 }

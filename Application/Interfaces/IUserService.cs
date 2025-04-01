@@ -11,6 +11,7 @@ namespace Application.Interfaces
     public interface IUserService
     {
         Task<int> RegisterUserAsync(UserRegistrationDto userRegistrationDto);
+        Task<IEnumerable<UserWithWalletAndKYCDto>> GetAllUsersWithWalletAndKYC();
         Task<IEnumerable<User>> GetAll();
         Task<int> CountAll();
         Task<int> SoftDelete(string userId);

@@ -1,6 +1,6 @@
-﻿using Domain.Contracts;
+﻿using Application.DTOs.UserDTO;
+using Domain.Contracts;
 using Infrastructure.GenericRepo;
-
 
 namespace Infrastructure.IRepository;
 
@@ -10,5 +10,6 @@ public interface IUserRepo : IGenericRepository<User,string>
     Task<User> GetUserByRefreshToken(string refreshToken);
 
     Task<bool> UpdateRefreshToken(string userId, string refreshToken, DateTime expiryDate);
+    Task<IEnumerable<UserWithWalletAndKYCDto>> GetAllUsersWithWalletAndKYC();
 
 }

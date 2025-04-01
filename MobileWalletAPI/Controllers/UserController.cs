@@ -1,8 +1,11 @@
 ﻿using Application.DTOs.UserDTO;
 using Application.Interfaces;
 using Application.Services;
+using Domain.Contracts;
+using Infrastructure.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace MobileWalletAPI.Controllers
 {
@@ -17,7 +20,7 @@ namespace MobileWalletAPI.Controllers
             _service = service;
         }
 
-      
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterCustomer([FromBody] UserRegistrationDto userRegistrationDto)
         {
@@ -46,6 +49,30 @@ namespace MobileWalletAPI.Controllers
                 status = "success",
                 count = users.Count(),
                 data = users
+            });
+        }
+
+
+        [HttpGet("all-with-wallet-kyc")]
+        public async Task<IActionResult> GetAllUsersWithWalletAndKYC()
+        {
+            var usersWithDetails = await _service.GetAllUsersWithWalletAndKYC();
+            if (usersWithDetails == null || !usersWithDetails.Any())
+            {
+                return NotFound(new
+                {
+                    message = "No users found with wallet and KYC details",
+                    status = "error",
+                    count = 0,
+                    data = new List<object>()
+                });
+            }
+            return Ok(new
+            {
+                message = "Users with wallet and KYC details fetched successfully",
+                status = "success",
+                count = usersWithDetails.Count(),
+                data = usersWithDetails
             });
         }
 
