@@ -42,22 +42,16 @@ namespace Application.Services
                 throw new Exception("User has already applied for KYC.");
             }
 
-            // Log user found and no existing KYC
-            Console.WriteLine($"User with ID {kycRegistrationDto.UserID} is eligible for KYC registration.");
-
-            // Create New KYC
+            // Convert DTO to Entity
             var kyc = _mapper.Map<KYC>(kycRegistrationDto);
             kyc.Id = Guid.NewGuid().ToString();
-            kyc.Status = BankStatus.PENDING.ToString();
+            kyc.Status = BankStatus.PENDING;
             kyc.CreatedOn = DateTime.UtcNow;
             kyc.UserID = kycRegistrationDto.UserID;
-            var result = await _kycRepository.Add(kyc);
 
-            // Log result of saving
-            Console.WriteLine(result > 0 ? "KYC created successfully." : "Failed to create KYC.");
-
-            return result;
+            return await _kycRepository.Add(kyc);
         }
+
 
 
         public async Task<KYC> GetById(string id)
@@ -65,10 +59,11 @@ namespace Application.Services
             var kyc = await _kycRepository.Get(id);
             if (kyc == null)
             {
-                throw new Exception("KYC record not found.");
+                throw new KeyNotFoundException("KYC record not found."); // Use KeyNotFoundException
             }
             return kyc;
         }
+
 
         public async Task<IEnumerable<KYC>> GetAll()
         {
@@ -88,9 +83,34 @@ namespace Application.Services
                 throw new Exception("KYC record not found.");
             }
 
-            var kyc = _mapper.Map<KYC>(kycRegistrationDto);
-            return await _kycRepository.Update(kyc);
+            _mapper.Map(kycRegistrationDto, existingKYC);
+
+            return await _kycRepository.Update(existingKYC);
         }
+        public async Task<int> UpdateStatus(KYCStatusDTO kycStatusDTO)
+        {
+            // Fetch the existing KYC record using the Get method
+            var existingKYC = await _kycRepository.Get("UserID", kycStatusDTO.UserId);
+
+            if (existingKYC == null)
+            {
+                throw new KeyNotFoundException("KYC record not found.");
+            }
+
+            // Ensure valid status
+            if (!Enum.IsDefined(typeof(BankStatus), kycStatusDTO.Status))
+            {
+                throw new ArgumentException("Invalid status value.");
+            }
+
+            existingKYC.Status = kycStatusDTO.Status;
+
+            return await _kycRepository.Update(existingKYC);
+        }
+
+
+
+
 
         public async Task<bool> SoftDelete(string id)
         {

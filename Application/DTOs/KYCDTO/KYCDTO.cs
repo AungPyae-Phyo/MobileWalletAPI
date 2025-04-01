@@ -17,7 +17,7 @@ namespace Application.DTOs.KYCDTO
         public string? FrontImage { get; set; }
         public string? BackImage { get; set; }
         public string? SelfieImage { get; set; }
-        public string? Status { get; set; } = Enum.GetName(typeof(BankStatus), BankStatus.NEW_USER);
+        public BankStatus? Status { get; set; }
 
     }
 }
@@ -28,11 +28,12 @@ public class KYCDTOProfile : Profile
     {
         // Map KYCDTO → KYC
         CreateMap<KYCDTO, KYC>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore Id (it will be generated in service)
+            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore Id (set in service)
             .ForMember(dest => dest.CreatedOn, opt => opt.Ignore()) // Ignore CreatedOn (set in service)
-            .ForMember(dest => dest.Status, opt => opt.Ignore()); // Ignore Status (set in service)
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? BankStatus.NEW_USER)); // Ensure default is set if null
 
-        // Map KYC → KYCDTO (if needed)
-        CreateMap<KYC, KYCDTO>();
+        // Map KYC → KYCDTO (for GET responses)
+        CreateMap<KYC, KYCDTO>()
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.HasValue ? src.Status : BankStatus.NEW_USER)); // Ensure default when returning
     }
 }

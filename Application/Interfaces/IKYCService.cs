@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.KYCDTO;
 using Domain.Contracts;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,11 @@ namespace Application.Interfaces
     {
         Task<int> Create(KYCDTO kycRegistrationDto);
         Task<IEnumerable<KYC>> GetAll();
+        Task<int> UpdateStatus(KYCStatusDTO kycStatusDTO);
         Task<KYC> GetById(string id);
         Task<int> Update(KYCDTO kycRegistrationDto);
         Task<bool> SoftDelete(string id);
         Task<int> CountAll();
+        
     }
 }
