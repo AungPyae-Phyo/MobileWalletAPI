@@ -8,25 +8,18 @@ namespace Domain.Enums
 {
     public enum BankStatus
     {
-        //Basic statuses
         NEW_USER,
         CLOSED,
-
-        //Verification statuses
         ACTIVE,
         PENDING,
-        INACTIVE,   
+        INACTIVE,
         ON_HOLD,
         SUSPENDED,
         APPROVE,
         REJECT,
         BLOCK,
-
-        // Technical statuses
         UNDER_MAINTENANCE,
-
-        // Security-related statuses
         LOCKED,
-        FROZEN,
+        FROZEN 
     }
 }
