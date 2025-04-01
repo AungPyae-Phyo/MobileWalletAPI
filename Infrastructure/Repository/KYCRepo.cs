@@ -1,4 +1,5 @@
-﻿using Domain.Contracts;
+﻿using Dapper;
+using Domain.Contracts;
 using Domain.Database;
 using Infrastructure.GenericRepository;
 using Infrastructure.IRepository;
@@ -11,8 +12,12 @@ namespace Infrastructure.Repository
         public KYCRepo(ApplicationDbContext context) : base(context)
         {
         }
-
         //Custom Methods
+        public async Task<int> UpdateStatus(KYC kyc)
+        {
+            string query = "UPDATE KYC SET Status = @Status WHERE UserID = @UserID";
+            return await _connection.ExecuteAsync(query, new { kyc.Status, kyc.UserID });
+        }
 
     }
 }
