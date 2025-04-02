@@ -4,8 +4,10 @@ using Domain.Contracts;
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Application.DTOs.KYCDTO
@@ -17,23 +19,31 @@ namespace Application.DTOs.KYCDTO
         public string? FrontImage { get; set; }
         public string? BackImage { get; set; }
         public string? SelfieImage { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public BankStatus? Status { get; set; }
 
     }
 }
-
-public class KYCDTOProfile : Profile
+public class KYCProfile : Profile
 {
-    public KYCDTOProfile()
+    public KYCProfile()
     {
-        // Map KYCDTO → KYC
         CreateMap<KYCDTO, KYC>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore()) // Ignore Id (set in service)
-            .ForMember(dest => dest.CreatedOn, opt => opt.Ignore()) // Ignore CreatedOn (set in service)
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status ?? BankStatus.NEW_USER)); // Ensure default is set if null
+            .ForMember(dest => dest.Status, opt =>
+                opt.MapFrom(src => src.Status.HasValue ? src.Status.ToString() : null));
+        // Convert Enum → String (Handles Null)
 
-        // Map KYC → KYCDTO (for GET responses)
         CreateMap<KYC, KYCDTO>()
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.HasValue ? src.Status : BankStatus.NEW_USER)); // Ensure default when returning
+            .ForMember(dest => dest.Status, opt =>
+                opt.ConvertUsing(new StringToEnumConverter(), src => src.Status));
+        // Convert String → Enum using a custom converter
+    }
+}
+
+public class StringToEnumConverter : IValueConverter<string, BankStatus?>
+{
+    public BankStatus? Convert(string sourceMember, ResolutionContext context)
+    {
+        return Enum.TryParse<BankStatus>(sourceMember, true, out var result) ? result : (BankStatus?)null;
     }
 }

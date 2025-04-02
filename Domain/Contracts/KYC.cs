@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Domain.Contracts;
@@ -16,5 +17,5 @@ public class KYC : BaseEntity<string>
     public string? FrontImage { get; set; }
     public string? BackImage { get; set; }
     public string? SelfieImage { get; set; }
-    public string? Status { get; set; } = Enum.GetName(typeof(BankStatus), BankStatus.NEW_USER);
+    public string? Status { get; set; }
 }   
