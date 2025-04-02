@@ -117,5 +117,10 @@ namespace Application.Services
 
             return await _walletRepository.SoftDelete(wallet) > 0;
         }
+
+        public async Task<IEnumerable<Wallet>> GetAll()
+        {
+            return await _walletRepository.GetAll("");
+        }
     }
 }
