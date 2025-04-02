@@ -16,9 +16,7 @@ namespace Application.DTOs.UserDTO
         public string Email { get; set; }
         public string Role { get; set; }
         public string WalletID { get; set; }
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-
-        public BankStatus Status { get; set; }
+        public string Status { get; set; }
         public decimal Balance { get; set; }
     }
 }

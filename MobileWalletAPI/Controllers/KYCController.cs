@@ -140,7 +140,7 @@ namespace MobileWalletAPI.Controllers
         /// Update KYC record.
         /// </summary>
         [HttpPut("update-status/{userId}")]
-        public async Task<IActionResult> UpdateStatus([FromBody] KYCStatusDTO kycStatusDTO, string userId)
+        public async Task<IActionResult> UpdateStatus([FromRoute] string userId, [FromBody] KYCStatusDTO kycStatusDTO)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace MobileWalletAPI.Controllers
                     return NotFound(new
                     {
                         message = "KYC record not found",
-                        status = "error",   
+                        status = "error",
                         errors = new List<object> { new { field = "ID", message = "No matching record found to update." } }
                     });
                 }
@@ -184,6 +184,7 @@ namespace MobileWalletAPI.Controllers
                 });
             }
         }
+
 
     }
 }
