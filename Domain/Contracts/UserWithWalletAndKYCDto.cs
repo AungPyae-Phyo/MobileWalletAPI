@@ -16,7 +16,7 @@ namespace Application.DTOs.UserDTO
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
-        public string WalletID { get; set; }
+        public string AccountNumber { get; set; }
         public string Status { get; set; }
         public decimal Balance { get; set; }
     }

@@ -11,6 +11,7 @@ namespace Domain.Contracts;
 public class Wallet : BaseEntity<string>
 {
     public string? UserId { get; set; }
+    public string? AccountNumber { get; set; }
     public decimal? Balance { get; set; }
 
 }

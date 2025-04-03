@@ -1,4 +1,5 @@
 ﻿using Application.DTOs.UserDTO;
+using Application.Helper;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Contracts;
@@ -63,6 +64,7 @@ namespace Application.Services
                     Balance = 0,
                     UserId = user.Id,
                     Name = user.Name,
+                    AccountNumber = GenerateWalletAccount.GenerateFormattedAccountNumber()
 
                 };
 
