@@ -53,7 +53,7 @@ namespace MobileWalletAPI.Controllers
         }
 
 
-        [HttpGet("all-with-wallet-kyc")]
+        [HttpGet("with-wallet-kyc")]
         public async Task<IActionResult> GetAllUsersWithWalletAndKYC()
         {
             var usersWithDetails = await _service.GetAllUsersWithWalletAndKYC();

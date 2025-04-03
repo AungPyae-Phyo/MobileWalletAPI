@@ -5,5 +5,6 @@ using Infrastructure.GenericRepo;
 namespace Infrastructure.IRepository;
 public interface IKYCRepo: IGenericRepository<KYC, string>
 {
-    //CustomRepositoryMethods
+    Task<int> UpdateStatus(KYC kyc);
+    
 }

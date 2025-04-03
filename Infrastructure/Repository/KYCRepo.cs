@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using Application.DTOs.UserDTO;
+using Dapper;
 using Domain.Contracts;
 using Domain.Database;
 using Infrastructure.GenericRepository;
@@ -17,6 +18,7 @@ namespace Infrastructure.Repository
         {
             string query = "UPDATE KYC SET Status = @Status WHERE UserID = @UserID";
             return await _connection.ExecuteAsync(query, new { Status = kyc.Status.ToString(), kyc.UserID });
+
         }
 
 
