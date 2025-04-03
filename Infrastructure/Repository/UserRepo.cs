@@ -35,25 +35,25 @@ public class UserRepo : GenericRepository<User, string>, IUserRepo
     public async Task<IEnumerable<UserWithWalletAndKYCDto>> GetAllUsersWithWalletAndKYC()
     {
         string query = @"
-                SELECT
-                    u.CreatedOn,
-                    u.Name AS UserName,
-                    u.PhoneNumber,
-                    u.Email,
-                    u.Role,
-                    w.Id AS WalletID,
-                    CASE
-                        WHEN k.UserID IS NOT NULL THEN k.Status  
-                        ELSE 'Pending'
-                    END AS Status,
-                    w.Balance AS Balance,
-                    k.DocumentType AS DocumentType
-                FROM
-                    Users u
-                JOIN
-                    Wallet w ON u.Id = w.UserId
-                LEFT JOIN
-                    KYC k ON u.Id = k.UserID";
+            SELECT
+                u.CreatedOn,
+                u.Name AS UserName,
+                u.PhoneNumber,
+                u.Email,
+                u.Role,
+                w.AccountNumber AS AccountNumber,  
+                CASE
+                    WHEN k.UserID IS NOT NULL THEN k.Status  
+                    ELSE 'Pending'
+                END AS Status,
+                w.Balance AS Balance,
+                k.DocumentType AS DocumentType
+            FROM
+                Users u
+            JOIN
+                Wallet w ON u.Id = w.UserId
+            LEFT JOIN
+                KYC k ON u.Id = k.UserID";
         return await _connection.QueryAsync<UserWithWalletAndKYCDto>(query);
     }
 
