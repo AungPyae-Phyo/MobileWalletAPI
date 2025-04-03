@@ -45,7 +45,7 @@ namespace Application.Services
             // Convert DTO to Entity
             var kyc = _mapper.Map<KYC>(kycRegistrationDto);
             kyc.Id = Guid.NewGuid().ToString();
-            kyc.Status = BankStatus.PENDING.ToString();
+            kyc.Status = BankStatus.NEW_USER.ToString();
             kyc.CreatedOn = DateTime.UtcNow;
             kyc.UserID = kycRegistrationDto.UserID;
 
