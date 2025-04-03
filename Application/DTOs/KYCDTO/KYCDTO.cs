@@ -15,10 +15,13 @@ namespace Application.DTOs.KYCDTO
     public class KYCDTO
     {
         public string? UserID { get; set; }
-        public string? DocumentType { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public DocumentType? DocumentType { get; set; }
+
         public string? FrontImage { get; set; }
         public string? BackImage { get; set; }
         public string? SelfieImage { get; set; }
+
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public BankStatus? Status { get; set; }
 
@@ -29,21 +32,20 @@ public class KYCProfile : Profile
     public KYCProfile()
     {
         CreateMap<KYCDTO, KYC>()
-            .ForMember(dest => dest.Status, opt =>
-                opt.MapFrom(src => src.Status.HasValue ? src.Status.ToString() : null));
-        // Convert Enum → String (Handles Null)
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.HasValue ? src.Status.ToString() : null))
+            .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType.HasValue ? src.DocumentType.ToString() : null));
 
         CreateMap<KYC, KYCDTO>()
-            .ForMember(dest => dest.Status, opt =>
-                opt.ConvertUsing(new StringToEnumConverter(), src => src.Status));
-        // Convert String → Enum using a custom converter
+            .ForMember(dest => dest.Status, opt => opt.ConvertUsing(new StringToEnumConverter<BankStatus>(), src => src.Status))
+            .ForMember(dest => dest.DocumentType, opt => opt.ConvertUsing(new StringToEnumConverter<DocumentType>(), src => src.DocumentType));
     }
 }
 
-public class StringToEnumConverter : IValueConverter<string, BankStatus?>
+public class StringToEnumConverter<TEnum> : IValueConverter<string, TEnum?>
+    where TEnum : struct, Enum
 {
-    public BankStatus? Convert(string sourceMember, ResolutionContext context)
+    public TEnum? Convert(string sourceMember, ResolutionContext context)
     {
-        return Enum.TryParse<BankStatus>(sourceMember, true, out var result) ? result : (BankStatus?)null;
+        return Enum.TryParse<TEnum>(sourceMember, true, out var result) ? result : (TEnum?)null;
     }
 }
