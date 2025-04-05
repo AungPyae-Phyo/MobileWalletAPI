@@ -17,5 +17,9 @@ public class KYC : BaseEntity<string>
     public string? FrontImage { get; set; }
     public string? BackImage { get; set; }
     public string? SelfieImage { get; set; }
+    public string? Identity { get; set; }
+    public DateTime? DOB {get;set; }
+    public string? FatherName { get; set; }
+    public string? Address { get; set; }
     public string? Status { get; set; }
 }   

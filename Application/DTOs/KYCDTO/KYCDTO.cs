@@ -2,13 +2,7 @@
 using AutoMapper;
 using Domain.Contracts;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Application.DTOs.KYCDTO
 {
@@ -17,11 +11,13 @@ namespace Application.DTOs.KYCDTO
         public string? UserID { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public DocumentType? DocumentType { get; set; }
-
+        public string? Identity { get; set; }
+        public string? Address { get; set; }
         public string? FrontImage { get; set; }
         public string? BackImage { get; set; }
         public string? SelfieImage { get; set; }
-
+        public DateTime? DOB { get; set; }
+        public string? FatherName { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public BankStatus? Status { get; set; }
 

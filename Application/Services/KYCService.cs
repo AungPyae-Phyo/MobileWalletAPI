@@ -5,10 +5,6 @@ using Domain.Contracts;
 using Domain.Enums;
 using Infrastructure.GenericRepo;
 using Infrastructure.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Application.Services
 {
     public class KYCService : IKYCService
@@ -45,14 +41,12 @@ namespace Application.Services
             // Convert DTO to Entity
             var kyc = _mapper.Map<KYC>(kycRegistrationDto);
             kyc.Id = Guid.NewGuid().ToString();
-            kyc.Status = BankStatus.NEW_USER.ToString();
+            kyc.Status = BankStatus.PENDING.ToString();
             kyc.CreatedOn = DateTime.UtcNow;
             kyc.UserID = kycRegistrationDto.UserID;
-
+            kyc.Name = userExists.Name;
             return await _kycRepository.Add(kyc);
         }
-
-
 
         public async Task<KYC> GetById(string id)
         {
