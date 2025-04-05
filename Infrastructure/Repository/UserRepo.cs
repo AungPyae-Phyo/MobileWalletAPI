@@ -41,6 +41,7 @@ public class UserRepo : GenericRepository<User, string>, IUserRepo
                 u.PhoneNumber,
                 u.Email,
                 u.Role,
+                u.Id AS UserID,
                 w.AccountNumber AS AccountNumber,  
                 CASE
                     WHEN k.UserID IS NOT NULL THEN k.Status  
