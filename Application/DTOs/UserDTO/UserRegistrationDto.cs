@@ -17,7 +17,7 @@ public class UserRegistrationDto
 
     public string? Email { get; set; } = default!;
 
-    public string? Role { get; set; } = Enum.GetName(typeof(Role), Domain.Enums.Role.None);
+    public string? Role { get; set; } = Enum.GetName(typeof(Role), Domain.Enums.Role.User);
 
     public string? HashPassword { get; set; } = default!;
 }
