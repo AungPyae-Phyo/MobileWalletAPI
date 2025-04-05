@@ -10,9 +10,9 @@ namespace Domain.Contracts;
 [Table("Limit_Fees")]
 public class LimitFees : BaseEntity<string>
 {
-    public string? TransactionTypeID { get; set; }
-    public string? Description { get; set; }
-    public decimal? MinAmount { get; set; }
-    public decimal? MaxAmount { get; set; }
+    public string? TransactionType { get; set; }
+    public string? description { get; set; }
+    public decimal? min_amount { get; set; }
+    public decimal? max_amount { get; set; }
     public decimal? PercentFee { get; set; }
 }
