@@ -10,6 +10,7 @@ namespace Application.DTOs.UserDTO
 {
     public class UserWithWalletAndKYCDto
     {
+        public string UserID { get; set; }
         public DateTime CreatedOn { get; set; }
         public string UserName { get; set; }
         public string DocumentType { get; set; }
