@@ -8,7 +8,7 @@ namespace Application.DTOs.KYCDTO
 {
     public class KYCStatusDTO
     {
-        public string  UserId{ get; set; }
+        public string Id { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public BankStatus Status { get; set; }

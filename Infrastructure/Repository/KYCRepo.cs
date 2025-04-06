@@ -16,11 +16,9 @@ namespace Infrastructure.Repository
         //Custom Methods
         public async Task<int> UpdateStatus(KYC kyc)
         {
-            string query = "UPDATE KYC SET Status = @Status WHERE UserID = @UserID";
-            return await _connection.ExecuteAsync(query, new { Status = kyc.Status.ToString(), kyc.UserID });
+            string query = "UPDATE KYC SET Status = @Status WHERE Id = @Id";
+            return await _connection.ExecuteAsync(query, new { Status = kyc.Status.ToString(), kyc.Id });
 
         }
-
-
     }
 }

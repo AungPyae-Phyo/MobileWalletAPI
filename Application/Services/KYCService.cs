@@ -90,16 +90,16 @@ namespace Application.Services
         }
         public async Task<int> UpdateStatus(KYCStatusDTO kycStatusDTO)
         {
-   
-            var existingKYC = await _kycRepository.Get("UserID", kycStatusDTO.UserId);
+            // Change "KYC ID" to "Id" to match the primary key
+            var existingKYC = await _kycRepository.Get(kycStatusDTO.Id);
             if (existingKYC == null)
             {
                 throw new KeyNotFoundException("KYC record not found.");
             }
 
-
-            existingKYC.Status = kycStatusDTO.Status.ToString(); 
-
+            existingKYC.Status = kycStatusDTO.Status.ToString();
+            existingKYC.LastModifiedBy = Role.Admin.ToString();
+            existingKYC.LastModifiedOn = DateTime.UtcNow;
 
             return await _kycRepository.Update(existingKYC);
         }
