@@ -134,39 +134,28 @@ namespace MobileWalletAPI.Controllers
         /// <summary>
         /// Update KYC record.
         /// </summary>
-        [HttpPut("update-status/{userId}")]
-        public async Task<IActionResult> UpdateStatus([FromRoute] string userId, [FromBody] KYCStatusDTO kycStatusDTO)
+        [HttpPut("update-status/{id}")]
+        public async Task<IActionResult> UpdateStatus([FromRoute] string id, [FromBody] KYCStatusDTO kycStatusDTO)
         {
             try
             {
-                // Check if userId in the route matches userId in the DTO
-                if (userId != kycStatusDTO.UserId)
-                {
-                    return BadRequest(new
-                    {
-                        message = "User ID mismatch.",
-                        status = "error",
-                        errors = new List<object> { new { field = "UserId", message = "User ID in route does not match User ID in the body." } }
-                    });
-                }
+                // Ensure the ID from route is assigned to the DTO
+                kycStatusDTO.Id = id;
 
-                // Call the service to update the status
                 var result = await _kycService.UpdateStatus(kycStatusDTO);
-
-                if (result == 0)
-                {
-                    return NotFound(new
-                    {
-                        message = "KYC record not found",
-                        status = "error",
-                        errors = new List<object> { new { field = "ID", message = "No matching record found to update." } }
-                    });
-                }
-
                 return Ok(new
                 {
                     message = "KYC status updated successfully",
                     status = "success"
+                });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new
+                {
+                    message = "KYC record not found",
+                    status = "error",
+                    errors = new List<object> { new { field = "ID", message = ex.Message } }
                 });
             }
             catch (Exception ex)
