@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MobileWalletAPI.Controllers
@@ -24,15 +25,48 @@ namespace MobileWalletAPI.Controllers
             try
             {
                 var result = await _walletService.Create(walletDto);
-                if (result > 0)
+
+                return Ok(new
                 {
-                    return Ok(new { message = "Wallet created successfully" });
-                }
-                return BadRequest(new { message = "Failed to create wallet" });
+                    message = "Wallet created successfully",
+                    status = "success",
+                    data = result
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Failed to create wallet",
+                    status = "error",
+                    errors = new List<object> { new { field = "Wallet", message = ex.Message } }
+                });
+            }
+        }
+
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllWallets()
+        {
+            try
+            {
+                var result = await _walletService.GetAll();
+
+                return Ok(new
+                {
+                    message = "Wallets retrieved successfully",
+                    status = "success",
+                    count = result.Count(),
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Failed to retrieve wallets",
+                    status = "error",
+                    errors = new List<object> { new { field = "Wallet", message = ex.Message } }
+                });
             }
         }
 
@@ -41,16 +75,33 @@ namespace MobileWalletAPI.Controllers
         {
             try
             {
-                var wallet = await _walletService.Get(userId);
-                if (wallet != null)
+                var result = await _walletService.Get(userId);
+
+                if (result == null)
                 {
-                    return Ok(wallet);
+                    return NotFound(new
+                    {
+                        message = "Wallet not found",
+                        status = "error",
+                        errors = new List<object> { new { field = "userId", message = "No wallet associated with this user" } }
+                    });
                 }
-                return NotFound(new { message = "Wallet not found" });
+
+                return Ok(new
+                {
+                    message = "Wallet retrieved successfully",
+                    status = "success",
+                    data = result
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Failed to retrieve wallet",
+                    status = "error",
+                    errors = new List<object> { new { field = "Wallet", message = ex.Message } }
+                });
             }
         }
 
@@ -60,33 +111,24 @@ namespace MobileWalletAPI.Controllers
             try
             {
                 var result = await _walletService.UpdateBalance(walletDto.UserId, walletDto.Balance);
-                if (result > 0)
+
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        message = "Wallet balance updated successfully",
-                        status = "success",
-                        data = new { userId = walletDto.UserId, balance = walletDto.Balance }
-                    });
-                }
-                return BadRequest(new
-                {
-                    message = "Failed to update wallet balance",
-                    status = "error",
-                    errors = new List<object> { new { field = "balance", message = "Could not process update." } }
+                    message = "Wallet balance updated successfully",
+                    status = "success",
+                    data = result
                 });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new
+                return StatusCode(500, new
                 {
-                    message = "An error occurred",
+                    message = "Failed to update balance",
                     status = "error",
-                    errors = new List<object> { new { field = "general", message = ex.Message } }
+                    errors = new List<object> { new { field = "Balance", message = ex.Message } }
                 });
             }
         }
-
 
         [HttpDelete("delete/{userId}")]
         public async Task<IActionResult> DeleteWallet(string userId)
@@ -94,15 +136,31 @@ namespace MobileWalletAPI.Controllers
             try
             {
                 var result = await _walletService.SoftDelete(userId);
-                if (result)
+
+                if (!result)
                 {
-                    return Ok(new { message = "Wallet deleted successfully" });
+                    return NotFound(new
+                    {
+                        message = "Wallet not found or already deleted",
+                        status = "error",
+                        errors = new List<object> { new { field = "userId", message = "No wallet found for deletion" } }
+                    });
                 }
-                return BadRequest(new { message = "Failed to delete wallet" });
+
+                return Ok(new
+                {
+                    message = "Wallet deleted successfully",
+                    status = "success"
+                });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Failed to delete wallet",
+                    status = "error",
+                    errors = new List<object> { new { field = "Wallet", message = ex.Message } }
+                });
             }
         }
     }
