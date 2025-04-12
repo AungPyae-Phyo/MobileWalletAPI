@@ -11,7 +11,7 @@ namespace Application.DTOs.WalletDTO
 {
     public class WalletDTO
     {
-        public string? UserId { get; set; }
+        public string? WalletId { get; set; }
         public decimal Balance { get; set; }
     }
 }

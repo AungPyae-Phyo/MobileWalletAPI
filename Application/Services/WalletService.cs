@@ -24,7 +24,7 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<int> Create(WalletDTO walletDto)
+        public async Task<int> Create(Wallet walletDto)
         {
             // Check if User Exists
             var userExists = await _userRepository.Get(walletDto.UserId);
@@ -63,12 +63,12 @@ namespace Application.Services
             return _mapper.Map<WalletDTO>(wallet);
         }
 
-        public async Task<int> UpdateBalance(string userId, decimal amount)
+        public async Task<Wallet> UpdateBalance(string walletId, decimal amount)
         {
-            var wallet = await _walletRepository.Get(userId);
+            var wallet = await _walletRepository.Get(walletId);
             if (wallet == null)
             {
-                throw new Exception("Wallet not found.");
+                throw new Exception($"Wallet not found for walletId: {walletId}");
             }
 
             if (wallet.Balance + amount < 0)
@@ -76,13 +76,17 @@ namespace Application.Services
                 throw new Exception("Insufficient balance.");
             }
 
+            wallet.LastModifiedBy = "Admin";
             wallet.Balance += amount;
-            return await _walletRepository.Update(wallet);
+
+            await _walletRepository.Update(wallet); // keep updating logic
+            return wallet; // return full wallet model
         }
+
 
         public async Task<int> Update(WalletDTO walletDto)
         {
-            var wallet = await _walletRepository.Get(walletDto.UserId);
+            var wallet = await _walletRepository.Get(walletDto.WalletId);
             if (wallet == null)
             {
                 throw new Exception("Wallet not found.");
