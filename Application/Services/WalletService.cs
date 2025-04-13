@@ -5,6 +5,7 @@ using Domain.Contracts;
 using Infrastructure.GenericRepo;
 using Infrastructure.UnitOfWork;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -14,6 +15,7 @@ namespace Application.Services
         private readonly IUnit _unit;
         private readonly IGenericRepository<User, string> _userRepository;
         private readonly IGenericRepository<Wallet, string> _walletRepository;
+        private readonly IGenericRepository<WalletHistory, string> _walletHistoryRepo;
         private readonly IMapper _mapper;
 
         public WalletService(IUnit unit, IMapper mapper)
@@ -21,45 +23,34 @@ namespace Application.Services
             _unit = unit;
             _walletRepository = _unit.GetRepository<Wallet, string>();
             _userRepository = _unit.GetRepository<User, string>();
+            _walletHistoryRepo = _unit.GetRepository<WalletHistory, string>(); // ✅ FIXED
             _mapper = mapper;
         }
 
         public async Task<int> Create(Wallet walletDto)
         {
-            // Check if User Exists
             var userExists = await _userRepository.Get(walletDto.UserId);
             if (userExists == null)
-            {
                 throw new Exception("User not found. Only registered users can have a Wallet.");
-            }
 
-            // Check if Wallet Already Exists
             var existingWallet = await _walletRepository.Get(walletDto.UserId);
             if (existingWallet != null)
-            {
                 throw new Exception("User already has a Wallet.");
-            }
 
-            Console.WriteLine($"User with ID {walletDto.UserId} is eligible for Wallet creation.");
-
-            // Create New Wallet
             var wallet = _mapper.Map<Wallet>(walletDto);
             wallet.Id = Guid.NewGuid().ToString();
             wallet.Balance = 0;
             wallet.UserId = walletDto.UserId;
 
-            var result = await _walletRepository.Add(wallet);
-            Console.WriteLine(result > 0 ? "Wallet created successfully." : "Failed to create Wallet.");
-            return result;
+            return await _walletRepository.Add(wallet);
         }
 
         public async Task<WalletDTO> Get(string userId)
         {
             var wallet = await _walletRepository.Get(userId);
             if (wallet == null)
-            {
                 throw new Exception("Wallet not found.");
-            }
+
             return _mapper.Map<WalletDTO>(wallet);
         }
 
@@ -67,20 +58,30 @@ namespace Application.Services
         {
             var wallet = await _walletRepository.Get(walletId);
             if (wallet == null)
-            {
                 throw new Exception($"Wallet not found for walletId: {walletId}");
-            }
 
             if (wallet.Balance + amount < 0)
-            {
                 throw new Exception("Insufficient balance.");
-            }
+
+            var previousBalance = wallet.Balance;
 
             wallet.LastModifiedBy = "Admin";
             wallet.Balance += amount;
 
-            await _walletRepository.Update(wallet); // keep updating logic
-            return wallet; // return full wallet model
+            await _walletRepository.Update(wallet);
+
+            var history = new WalletHistory
+            {
+                Id = Guid.NewGuid().ToString(),
+                WalletId = wallet.Id,
+                ChangeAmount = amount,
+                PreviousBalance = (decimal)previousBalance,
+                NewBalance = (decimal)wallet.Balance,     
+            };
+
+            await _walletHistoryRepo.Add(history);
+
+            return wallet;
         }
 
 
@@ -88,9 +89,7 @@ namespace Application.Services
         {
             var wallet = await _walletRepository.Get(walletDto.WalletId);
             if (wallet == null)
-            {
                 throw new Exception("Wallet not found.");
-            }
 
             wallet.Balance = walletDto.Balance;
             return await _walletRepository.Update(wallet);
@@ -100,11 +99,21 @@ namespace Application.Services
         {
             var wallet = await _walletRepository.Get(userId);
             if (wallet == null)
-            {
                 throw new Exception("Wallet not found.");
-            }
+
             return await _walletRepository.Delete(wallet);
         }
+
+        public async Task<IEnumerable<WalletHistory>> GetWalletHistory(string walletId)
+        {
+            var allHistories = await _walletHistoryRepo.GetAll("");
+            var history = allHistories
+                .Where(h => h.WalletId == walletId);
+                
+            return history;
+        }
+
+
 
         public async Task<int> CountAll()
         {
@@ -115,9 +124,7 @@ namespace Application.Services
         {
             var wallet = await _walletRepository.Get(userId);
             if (wallet == null)
-            {
                 throw new Exception("Wallet record not found.");
-            }
 
             return await _walletRepository.SoftDelete(wallet) > 0;
         }
