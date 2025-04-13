@@ -3,8 +3,9 @@ using Application.Helper;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Contracts;
+using Domain.Enums;
 using Infrastructure.GenericRepo;
-using Infrastructure.IRepository;
+using Infrastructure.IRepository;   
 using Infrastructure.UnitOfWork;
 using System;
 using System.Threading.Tasks;
@@ -48,6 +49,7 @@ namespace Application.Services
                 // Create new user
                 var user = _mapper.Map<User>(userRegistrationDto);
                 user.Id = Guid.NewGuid().ToString().ToUpper();
+                user.Role = Enum.GetName(typeof(Role), Domain.Enums.Role.User);
                 user.HashPassword = BCrypt.Net.BCrypt.HashPassword(userRegistrationDto.HashPassword); // Fix variable name
 
                 int userResult = await _userRepository.Add(user);
