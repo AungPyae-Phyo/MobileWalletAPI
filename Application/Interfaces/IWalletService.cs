@@ -18,6 +18,6 @@ namespace Application.Interfaces
         Task<bool> SoftDelete(string userId);
         Task<int> CountAll();
         Task<IEnumerable<WalletHistory>> GetWalletHistory(string walletId);
-
+        Task<Wallet> FindByAccountNumber(string accountNumber);
     }
 }

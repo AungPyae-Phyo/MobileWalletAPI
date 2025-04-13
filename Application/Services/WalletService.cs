@@ -75,14 +75,22 @@ namespace Application.Services
                 Id = Guid.NewGuid().ToString(),
                 WalletId = wallet.Id,
                 ChangeAmount = amount,
+                LastModifiedBy = "Admin",
                 PreviousBalance = (decimal)previousBalance,
-                NewBalance = (decimal)wallet.Balance,     
+                NewBalance = (decimal)wallet.Balance,
             };
 
             await _walletHistoryRepo.Add(history);
 
             return wallet;
         }
+
+        public async Task<Wallet> FindByAccountNumber(string accountNumber)
+        {
+            var allWallets = await _walletRepository.GetAll("");
+            return allWallets.FirstOrDefault(w => w.AccountNumber == accountNumber);
+        }
+
 
 
         public async Task<int> Update(WalletDTO walletDto)
