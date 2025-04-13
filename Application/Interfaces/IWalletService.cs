@@ -10,14 +10,14 @@ namespace Application.Interfaces
 {
     public interface IWalletService
     {
-        Task<int> Create(WalletDTO walletDto);
-        Task<int> UpdateBalance(string userId, decimal amount);
+        Task<int> Create(Wallet walletDto);
+        Task<Wallet> UpdateBalance(string WalletId, decimal amount);
         Task<WalletDTO> Get(string userId);
         Task<IEnumerable<Wallet>> GetAll();
         Task<int> Update(WalletDTO walletDto);
         Task<bool> SoftDelete(string userId);
         Task<int> CountAll();
-
+        Task<IEnumerable<WalletHistory>> GetWalletHistory(string walletId);
 
     }
 }
