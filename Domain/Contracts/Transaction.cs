@@ -10,5 +10,12 @@ namespace Domain.Contracts;
 [Table("TransactionTable")]
 public class Transaction:BaseEntity<string>
 {
+    public string SenderWalletId { get; set; } 
+
+    public string ReceiverWalletId { get; set; }
+
+    public string? TransactionType { get; set; } 
+
+    public decimal Amount { get; set; }
 
 }
