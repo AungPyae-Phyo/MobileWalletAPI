@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.WalletDTO;
 using Application.Interfaces;
+using Domain.Contracts;
+using Infrastructure.IRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,6 +15,7 @@ namespace MobileWalletAPI.Controllers
     public class WalletController : ControllerBase
     {
         private readonly IWalletService _walletService;
+        private readonly IWalletHistoryService  _walletHistoryService;
 
         public WalletController(IWalletService walletService)
         {
@@ -104,6 +107,36 @@ namespace MobileWalletAPI.Controllers
                 });
             }
         }
+        [HttpGet("history/{walletId}")]
+        public async Task<IActionResult> GetWalletHistory(string walletId)
+        {
+            try
+            {
+                var history = await _walletService.GetWalletHistory(walletId);
+
+                return Ok(new
+                {
+                    message = "History retrieved successfully",
+                    status = "success",
+                    count = history.Count(),
+                    data = history
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WalletController] ERROR: {ex.Message}");
+                return StatusCode(500, new
+                {
+                    message = "Failed to retrieve wallet history",
+                    status = "error",
+                    errors = new List<object> {
+                new { field = "WalletHistory", message = ex.Message }
+            }
+                });
+            }
+        }
+
+
 
         [HttpPut("update-balance")]
         public async Task<IActionResult> UpdateBalance([FromBody] WalletDTO walletDto)
