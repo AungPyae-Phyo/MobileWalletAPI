@@ -23,29 +23,29 @@ namespace MobileWalletAPI.Controllers
         }
 
         [HttpPost("create")]
-        //public async Task<IActionResult> CreateWallet([FromBody] WalletDTO walletDto)
-        //{
-        //    try
-        //    {
-        //        var result = await _walletService.Create(walletDto);
+        public async Task<IActionResult> CreateWallet([FromBody] Wallet walletDto)
+        {
+            try
+            {
+                var result = await _walletService.Create(walletDto);
 
-        //        return Ok(new
-        //        {
-        //            message = "Wallet created successfully",
-        //            status = "success",
-        //            data = result
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new
-        //        {
-        //            message = "Failed to create wallet",
-        //            status = "error",
-        //            errors = new List<object> { new { field = "Wallet", message = ex.Message } }
-        //        });
-        //    }
-        //}
+                return Ok(new
+                {
+                    message = "Wallet created successfully",
+                    status = "success",
+                    data = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Failed to create wallet",
+                    status = "error",
+                    errors = new List<object> { new { field = "Wallet", message = ex.Message } }
+                });
+            }
+        }
 
         [HttpGet("all")]
         public async Task<IActionResult> GetAllWallets()
