@@ -5,6 +5,9 @@ using Domain.Database;
 using Infrastructure.IRepository;
 using Infrastructure.Repository;
 using Infrastructure.UnitOfWork;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,10 +29,11 @@ builder.Services.AddScoped<IKYCRepo, KYCRepo>();
 builder.Services.AddScoped<IWalletService, WalletService>();
 builder.Services.AddScoped<IKYCService, KYCService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITransactionRepo, TransactionRepo>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<ILimitFeesService, LimitFeesService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IUnit, Unit>();
-
-builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
