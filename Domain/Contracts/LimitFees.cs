@@ -14,5 +14,5 @@ public class LimitFees : BaseEntity<string>
     public string? description { get; set; }
     public decimal? min_amount { get; set; }
     public decimal? max_amount { get; set; }
-    public decimal? PercentFee { get; set; }
+    public decimal? percent_fees { get; set; }
 }
