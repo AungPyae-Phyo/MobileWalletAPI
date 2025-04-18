@@ -60,7 +60,7 @@ namespace MobileWalletAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLimitFees(int id, [FromBody] LimitFeesDTO limitFeesDto)
+        public async Task<IActionResult> UpdateLimitFees(string id, [FromBody] LimitFeesDTO limitFeesDto)
         {
             try
             {
@@ -71,12 +71,14 @@ namespace MobileWalletAPI.Controllers
                         message = "Invalid input data",
                         status = "error",
                         errors = new List<object>
-                        {
-                            new { field = "LimitFees", message = "Limit fees data is required" }
-                        }
+                {
+                    new { field = "LimitFees", message = "Limit fees data is required" }
+                }
                     });
                 }
+
                 var result = await _limitFeesService.Update(id, limitFeesDto);
+
                 return Ok(new
                 {
                     message = "Limit fees updated successfully",
@@ -91,12 +93,13 @@ namespace MobileWalletAPI.Controllers
                     message = "Failed to update limit fees",
                     status = "error",
                     errors = new List<object>
-                    {
-                        new { field = "LimitFees", message = ex.Message }
-                    }
+            {
+                new { field = "LimitFees", message = ex.Message }
+            }
                 });
             }
         }
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllLimitFees()

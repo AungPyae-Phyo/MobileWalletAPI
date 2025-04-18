@@ -20,16 +20,19 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<int> Update(LimitFees limitFees)
+        public async Task<int> Update(string id, LimitFeesDTO limitFeesDto)
         {
-            var entity = await _limitFees.Get(limitFees.Id);
+            var entity = await _limitFees.Get(id);
             if (entity == null)
                 throw new Exception("LimitFees not found");
-            entity = _mapper.Map(limitFees, entity);
+
+            _mapper.Map(limitFeesDto, entity); 
             entity.LastModifiedOn = DateTime.UtcNow;
-            entity.LastModifiedBy = "admin";
+            entity.LastModifiedBy = "Admin";
+
             return await _limitFees.Update(entity);
         }
+
 
         public async Task<int> Create(LimitFeesDTO limitFeesDto)
         {

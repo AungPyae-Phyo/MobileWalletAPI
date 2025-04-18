@@ -10,6 +10,7 @@ namespace Application.Interfaces
         Task<int> Create(LimitFeesDTO limitFeesDto);
         Task<int> CountAll();
         Task<IEnumerable<LimitFees>> GetAll();
-        Task<int> Update(LimitFees limitFees);
+        Task<int> Update(string id, LimitFeesDTO limitFeesDto);
+
     }
 }
