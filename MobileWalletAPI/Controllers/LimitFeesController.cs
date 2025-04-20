@@ -59,7 +59,7 @@ namespace MobileWalletAPI.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdateLimitFees(string id, [FromBody] LimitFeesDTO limitFeesDto)
         {
             try
