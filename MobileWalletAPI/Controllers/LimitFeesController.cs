@@ -1,4 +1,4 @@
-﻿using Application.DTOs.LimitFeesDTO;
+﻿    using Application.DTOs.LimitFeesDTO;
 using Application.Interfaces;
 using Domain.Contracts;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MobileWalletAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class LimitFeesController : ControllerBase
     {
@@ -101,7 +101,7 @@ namespace MobileWalletAPI.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAllLimitFees()
         {
             try
