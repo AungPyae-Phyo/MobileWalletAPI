@@ -13,7 +13,7 @@ namespace Application.DTOs.LimitFeesDTO
 {
     public class LimitFeesDTO
     {
-        public string? limit_fees_id { get; set; }
+     //   public string? limit_fees_id { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TransactionType? TransactionType { get; set; }
         public string? description { get; set; }
