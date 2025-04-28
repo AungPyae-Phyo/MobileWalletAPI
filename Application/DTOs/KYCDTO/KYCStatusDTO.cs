@@ -11,7 +11,7 @@ namespace Application.DTOs.KYCDTO
         public string Id { get; set; }
 
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public BankStatus Status { get; set; }
+        public KYCStatus Status { get; set; }
     }
 
     public class KYCStatusProfile : Profile
@@ -31,11 +31,11 @@ namespace Application.DTOs.KYCDTO
     }
 
     // Custom Value Resolver to Convert String → Enum
-    public class StringToEnumConverter : IValueConverter<string, BankStatus>
+    public class StringToEnumConverter : IValueConverter<string, KYCStatus>
     {
-        public BankStatus Convert(string sourceMember, ResolutionContext context)
+        public KYCStatus Convert(string sourceMember, ResolutionContext context)
         {
-            return Enum.TryParse<BankStatus>(sourceMember, true, out var status) ? status : BankStatus.NEW_USER;
+            return Enum.TryParse<KYCStatus>(sourceMember, true, out var status) ? status : KYCStatus.NEW_USER;
         }
     }
 }

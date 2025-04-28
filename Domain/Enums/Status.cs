@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum BankStatus
+    public enum KYCStatus
     {
         NEW_USER,
         CLOSED,

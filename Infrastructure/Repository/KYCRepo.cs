@@ -1,12 +1,11 @@
-﻿using Application.DTOs.UserDTO;
-using Dapper;
+﻿using Dapper;
 using Domain.Contracts;
 using Domain.Database;
 using Infrastructure.GenericRepository;
 using Infrastructure.IRepository;
 
 
-namespace Infrastructure.Repository
+namespace Infrastructure.Repository 
 {
     public class KYCRepo:GenericRepository<KYC, string>, IKYCRepo
     {

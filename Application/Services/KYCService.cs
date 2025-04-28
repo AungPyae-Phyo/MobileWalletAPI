@@ -41,7 +41,7 @@ namespace Application.Services
             // Convert DTO to Entity
             var kyc = _mapper.Map<KYC>(kycRegistrationDto);
             kyc.Id = Guid.NewGuid().ToString();
-            kyc.Status = BankStatus.PENDING.ToString();
+            kyc.Status = KYCStatus.PENDING.ToString();
             kyc.CreatedOn = DateTime.UtcNow;
             kyc.UserID = kycRegistrationDto.UserID;
             kyc.Name = userExists.Name;
@@ -56,7 +56,7 @@ namespace Application.Services
                 throw new KeyNotFoundException("KYC record not found.");
             }
 
-            if (Enum.TryParse<BankStatus>(kyc.Status, true, out var status))
+            if (Enum.TryParse<KYCStatus>(kyc.Status, true, out var status))
             {
                 kyc.Status = status.ToString();
             }
