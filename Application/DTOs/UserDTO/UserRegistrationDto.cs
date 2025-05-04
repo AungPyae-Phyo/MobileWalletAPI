@@ -17,7 +17,7 @@ public class UserRegistrationDto
 
     public string? Email { get; set; } = default!;
 
-    public string? Role { get; set; } = Enum.GetName(typeof(Role), Domain.Enums.Role.User);
+   // public string? Role { get; set; } = Enum.GetName(typeof(Role), Domain.Enums.Role.User);
 
     public string? HashPassword { get; set; } = default!;
 }
@@ -30,7 +30,7 @@ public class UserDtoProfile : Profile
            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
            .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-           .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
+         //  .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
            .ForMember(dest => dest.HashPassword, opt => opt.MapFrom(src => src.HashPassword));
     }
 }
