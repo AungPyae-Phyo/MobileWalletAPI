@@ -11,6 +11,7 @@ namespace Application.Interfaces
         Task<int> CountAll();
         Task<IEnumerable<LimitFees>> GetAll();
         Task<int> Update(string id, LimitFeesDTO limitFeesDto);
+        Task<bool> Delete(string id);
 
     }
 }
