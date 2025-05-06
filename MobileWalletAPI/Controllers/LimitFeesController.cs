@@ -129,5 +129,47 @@ namespace MobileWalletAPI.Controllers
                 });
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteLimitFees(string id)
+        {
+            try
+            {
+                var exists = await _limitFeesService.Delete(id);
+                if (!exists)
+                {
+                    return NotFound(new
+                    {
+                        message = "Limit fees not found",
+                        status = "error",
+                        errors = new List<object>
+                {
+                    new { field = "LimitFees", message = "Limit fees not found" }
+                }
+                    });
+                }
+
+                var success = await _limitFeesService.Delete(id);
+                return Ok(new
+                {
+                    message = "Limit fees deleted successfully",
+                    status = "success",
+                    data = success
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    message = "Failed to delete limit fees",
+                    status = "error",
+                    errors = new List<object>
+            {
+                new { field = "LimitFees", message = ex.Message }
+            }
+                });
+            }
+        }
+
     }
 }
