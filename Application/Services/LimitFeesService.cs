@@ -53,7 +53,26 @@ namespace Application.Services
 
         public async Task<IEnumerable<LimitFees>> GetAll()
         {
-            return await _limitFees.GetAll("");
+            var all = await _limitFees.GetAll("");
+            return all.Where(x => x.IsDeleted != true);
         }
+        public async Task<bool> Delete(string id)
+        {
+            var entity = await _limitFees.Get(id);
+            if (entity == null)
+                return false;
+
+            entity.IsDeleted = true;
+            entity.DeletedOn = DateTime.UtcNow;
+            entity.LastModifiedOn = DateTime.UtcNow;
+            entity.LastModifiedBy = "Admin";
+
+            await _limitFees.Update(entity);
+            return true;
+        }
+
+
+
+
     }
 }
