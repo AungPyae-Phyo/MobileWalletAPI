@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.TransactionDTO;
 using Application.Interfaces;
+using Application.Services;
 using Infrastructure.IRepository;
 using Microsoft.AspNetCore.Mvc;
 
@@ -77,5 +78,13 @@ namespace MobileWalletAPI.Controllers
                 data = result
             });
         }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetAdminTransactionHistory()
+        {
+            var history = await _transactionRepo.GetAllTransactionsHistory();
+            return Ok(new { status = "success", data = history });
+        }
+
     }
 }
